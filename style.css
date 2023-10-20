@@ -791,6 +791,7 @@ table thead {
 table th,table td,table tr {
     border: 1px solid #ececec;
     padding: 2px 7px
+    white-space: nowrap;
 }
 
 .wrapper:after,.navbar:after,.post-item:after {
