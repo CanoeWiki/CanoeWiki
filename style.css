@@ -1888,3 +1888,11 @@ body[data-theme="dark"] .search-article input[type="search"]::-webkit-input-plac
   @keyframes l5-0{ 
     100% {background-size:120% 100%,20% 100%}
   }
+
+.scroll_area{
+    width:600px;
+    overflow-x:scroll;
+}
+.scroll_area table{
+    width:900px;
+}
