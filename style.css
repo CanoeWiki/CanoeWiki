@@ -782,6 +782,10 @@ table {
     white-space: nowrap;
 }
 
+td{
+    white-space: nowrap;
+}
+
 table thead {
     font-weight: 700;
     color: #0d122b;
