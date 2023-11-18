@@ -776,14 +776,10 @@ sup {
 }
 
 table {
+    white-space: nowrap;
     margin-top: 15px;
     border-collapse: collapse;
     font-size: 14px
-    white-space: nowrap;
-}
-
-td{
-    white-space: nowrap;
 }
 
 table thead {
@@ -795,13 +791,16 @@ table thead {
 table th,table td,table tr {
     border: 1px solid #ececec;
     padding: 2px 7px
-    white-space: nowrap;
 }
 
 .wrapper:after,.navbar:after,.post-item:after {
     content: "";
     display: table;
     clear: both
+}
+
+td{
+    white-space: nowrap;
 }
 
 mark,::selection {
@@ -818,9 +817,8 @@ mark,::selection {
 }
 
 .navbar {
-    height: auto;
+    height:auto;
     max-width: calc(890px - (30px * 2));
-    max-width: -webkit-calc(890px - (30px * 2));
     position: relative;
     margin-right: auto;
     margin-left: auto;
@@ -1016,6 +1014,12 @@ mark,::selection {
 @media screen and (max-width: 768px) {
     .author {
         margin-bottom:3em
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title {
+        margin-top:30px
     }
 }
 
@@ -1895,10 +1899,16 @@ body[data-theme="dark"] .search-article input[type="search"]::-webkit-input-plac
     100% {background-size:120% 100%,20% 100%}
   }
 
-.scroll_area{
-    width:600px;
-    overflow-x:scroll;
-}
-.scroll_area table{
-    width:900px;
-}
+  .scroll{
+    overflow: auto;
+    white-space:nowrap;
+    }
+    .scroll::-webkit-scrollbar{
+    height: 15px;
+    }
+    .scroll::-webkit-scrollbar-track{
+    background: #f1f1f1;
+    }
+    .scroll::-webkit-scrollbar-thumb{
+    background: #bbb;
+    }

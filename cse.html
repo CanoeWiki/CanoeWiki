@@ -36,223 +36,7 @@
         <meta name="msapplication-TileColor" content="#da532c"/>
         <meta name="theme-color" content="#2c2c2c"/>
         <link rel="stylesheet" href="style.css"/>
-        <script language="javascript" type="text/javascript">        
-            var api_url = "https://script.google.com/macros/s/AKfycbyeL6SBI4mn_o3jV97JjQ2F1kUvZdALUNnKk97OV9ZGWY9rk9dYXa3ADfaH04RXHTZG/exec";
 
-            function OnButtonClick() {
-                target = document.getElementById("output");
-                target.innerHTML = '<div class="loader"></div>';
-                fetch(api_url)
-                .then(function (fetch_data) {
-                return fetch_data.json();
-                })
-                .then(function (json) { 
-                    family_name_input = document.getElementById("family_name");
-                    given_name_input = document.getElementById("given_name");
-                    year_input = document.getElementById("year");
-                    competition_input = document.getElementById("competition");
-                    event_input = document.getElementById("event");
-                    distance_input = document.getElementById("distance");
-                    team_input = document.getElementById("team");
-    
-                    //checkboxの値を取得
-                    array_check = [];
-                    check2 = document.display.check1
-                    for (let i = 0; i < check2.length; i++) {
-                        if (check2[i].checked) {
-                            array_check.push(true);
-                        }else{
-                            array_check.push(false);
-                        }
-                    }
-                    array_check2 = [];
-                    check4 = document.radio.check3
-                    for (let i = 0; i < check4.length; i++) {
-                        if (check4[i].checked) {
-                            array_check2.push(true);
-                        }else{
-                            array_check2.push(false);
-                        }
-                    }
-    
-                    if(family_name_input.value == ""&&given_name_input.value == ""&&year_input.value == "notselected"&&competition_input.value == "notselected"&&event_input.value == "notselected"&&distance_input.value == "notselected"&&team_input.value == ""){
-                        alert("検索条件を入力してください")
-                    }else{
-                        content = "";
-                        //検索条件でフィルター
-                        array = filter_family_name(json);
-                        array = filter_given_name(array);
-                        array = filter_year(array);
-                        array = filter_competition(array);
-                        array = filter_event(array);
-                        array = filter_distance(array);
-                        array = filter_team(array);
-    
-                        //年順にソート
-                        if(array_check2[0]==true){
-                            array.sort(function(a,b){
-                                if(a.year > b.year){
-                                    return -1;
-                                }else{
-                                    return 1;
-                                }
-                            })
-                        }else{
-                            for (var i in array){
-                                if(array[i].centisec==""){
-                                    array[i].newtime = 10000
-                                }else{
-                                    array[i].newtime = array[i].min*60+array[i].sec+array[i].centisec/1000
-                                }
-                            }
-                            array.sort(function(a,b){
-                                if(a.newtime > b.newtime){
-                                    return 1;
-                                }else{
-                                    return -1;
-                                }
-                            })
-                        }
-                        console.log(array)
-    
-                        output(array,array_check)
-                        if(content == ""){
-                            alert("一致するデータはありませんでした")
-                        }else{
-                            target.innerHTML = "<table>"+content+"</table>";
-                        }
-                        
-                    }
-                })  
-            }
-            function filter_family_name(array){
-                if(family_name_input.value == ""){
-                    return array
-                }else{
-                    array = array.filter(function (value) {
-                        return value.family_name == family_name_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_given_name(array){
-                if(given_name_input.value == ""){
-                    return array
-                }else{
-                    array = array.filter(function (value) {
-                        return value.given_name == given_name_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_year(array){
-                if (year_input.value == "notselected"){
-                    return array
-                }else{
-                    array = array.filter(function(value) {
-                        return value.year == year_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_competition(array){
-                if (competition_input.value == "notselected"){
-                    return array
-                }else{
-                    array = array.filter(function(value) {
-                        return value.competition == competition_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_event(array){
-                if (event_input.value == "notselected"){
-                    return array
-                }else{
-                    array = array.filter(function(value) {
-                        return value.event == event_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_distance(array){
-                if (distance_input.value == "notselected"){
-                    return array
-                }else{
-                    array = array.filter(function(value) {
-                        return value.distance == distance_input.value;
-                    })
-                    return array
-                }
-            }
-            function filter_team(array){
-                if(team_input.value == ""){
-                    return array
-                }else{
-                    array = array.filter(function (value) {
-                        return value.team == team_input.value;
-                    })
-                    return array
-                }
-            }
-            function output(array,array_check){
-                content ="<tr><th>名字</th><th>名前</th>"
-                if(array_check[0]==true){
-                    content += "<th>開催年</th>"
-                }
-                if(array_check[1]==true){
-                    content += "<th>大会</th>"
-                }
-                if(array_check[2]==true){
-                    content += "<th>種目</th>"
-                }
-                if(array_check[3]==true){
-                    content += "<th>距離</th>"
-                }
-                content += "<th>レース</th><th>順位</th>"
-                if(array_check[4]==true){
-                    content += "<th>所属</th>"
-                }
-                content +="<th>タイム</th></tr>"
-                for (var i in array) {
-                    content += "<td>"+array[i].family_name+"</td>"+"<td>"+array[i].given_name+"</td>"
-                    if(array_check[0]==true){
-                        content += "<td>"+array[i].year+"年</td>"
-                    }
-                    if(array_check[1]==true){
-                        content += "<td>"+array[i].competition+"</td>"
-                    }
-                    if(array_check[2]==true){
-                        content += "<td>"+array[i].event+"</td>"
-                    }
-                    if(array_check[3]==true){
-                        content += "<td>"+array[i].distance+" m</td>"
-                    }
-                    content += "<td>"+array[i].race+"</td>"+"<td>"+array[i].rank+"位"              
-                    
-                    if(array[i].race=="F"||array[i].race=="AF"){
-                        if (array[i].rank == 1){
-                            content = content +" &#129351;</td>" //金メダル
-                        }else if (array[i].rank == 2){
-                            content = content + " &#129352;</td>" //銀メダル
-                        }else if (array[i].rank == 3){
-                            content = content +" &#129353;</td>" //銅メダル
-                        }else{
-                            content +="</td>"
-                        }
-                    }
-                    if(array_check[4]==true){
-                        content += "<td>"+array[i].team+"</td>"
-                    }
-                    if(array[i].sec != ""){
-                        content +=  "<td>"+array[i].min+"分"+array[i].sec+"秒"+array[i].centisec+"</td>"
-                    }
-                    content += "</tr>"  
-                }
-                return content;
-            }
-    
-          </script>
     </head>
     <body data-theme="dark" class="notransition">
         <script>
@@ -271,7 +55,7 @@
             initTheme(localStorage.getItem("theme"));
             setTimeout(()=>body.classList.remove("notransition"), 75);
         </script>
-        <div class="navbar" role="navigation">
+        <div class="navbar custom-cursor-default-hover" role="navigation">
             <nav class="menu">
                 <input type="checkbox" id="menu-trigger" class="menu-trigger"/>
                 <label for="menu-trigger">
@@ -310,28 +94,21 @@
                 <div class="trigger">
                     <div class="trigger-container">
                         <a class="menu-link" href="./index.html">HOME</a>
-                        <a class="menu-link" href="/about/">カヌーWikiについて</a>
                         <a class="menu-link active" href="./cse.html">検索エンジン</a>
-                        <a class="menu-link" href="/blog/">ブログ</a>
+                        <a class="menu-link" href="./blog.html">ブログ</a>
                     </div>
                 </div>
             </nav>
         </div>
         <div class="wrapper">
-            <h2>検索システム・データベース</h2>
+            <div class="title">
+                <h2>検索システム・データベース</h2>
+            </div>
             データ引用元：
             <a href='https://www.canoe.or.jp/'>日本カヌー連盟</a>，
             <a href='https://zen-koukoucanoe.com/'>全国高体連 カヌー専門部</a>，
             <a href='https://jscf.site/'>全日本学生カヌー連盟</a>
-            <br><br>
-            <details><summary>使い方</summary>
-            検索条件を1つ以上入力してください．<br>
-            国内主要大会の決勝のレースを検索できます（一部，決勝以外のレースも含まれます）．<br>
-            検索は完全一致です．今の段階では部分検索はできません．<br>
-            現在，2021年~2023年の大会のデータが登録されています．過去のデータも順次追加予定です．詳しくは更新記録をご覧ください．<br>
-            BFが実施されたレースは可能な限りデータベースに登録しています．<br>
-            タイム等，不備がある場合がありますが，順次追加予定です．<br>
-            </details>
+            <br>
             <h3>検索条件</h3>
             <form name = "condition">
                 名　字:
@@ -391,13 +168,18 @@
                 <input type="text" size="10" id="team"><br>
                 <input type="Reset" value="入力をリセット">
             </form>
+            <details><summary>詳細検索</summary>
             <h3>表示条件</h3>
             <form name = "display">
                 <label><input type="checkbox" checked name="check1" value="year_check">開催年</label>
                 <label><input type="checkbox" checked name="check1" value="competition_check">大会</label>
                 <label><input type="checkbox" checked name="check1" value="race_check">種目</label>
                 <label><input type="checkbox" checked name="check1" value="distance_check">距離</label>
-                <label><input type="checkbox" name="check1" value="team_check">所属</label><br>
+                <label><input type="checkbox" checked name="check1" value="race2_check">レース</label>
+                <label><input type="checkbox" checked name="check1" value="rank_check">順位</label>
+                <label><input type="checkbox" name="check1" value="team_check">所属</label>
+                <label><input type="checkbox" checked name="check1" value="time_check">タイム</label><br>
+                
                 <input type="Reset" value="入力をリセット">
             </form>
             <h3>表示順</h3>
@@ -407,15 +189,25 @@
                     <input type="radio" name="check3" value="time">タイム
                 </div>
             </form>
+            </details>
+            <details><summary>使い方</summary>
+                検索条件を1つ以上入力してください．<br>
+                国内主要大会の決勝のレースを検索できます（一部，決勝以外のレースも含まれます）．<br>
+                検索は完全一致です．今の段階では部分検索はできません．<br>
+                現在，2015年~2023年の大会のデータが登録されています．<br>
+                BFが実施されたレースは可能な限りデータベースに登録しています．<br>
+                タイム等，不備がある場合がありますが，順次追加予定です．<br>
+                </details>
             <input type="button" value="検索" onclick="OnButtonClick()"> 
             <br>
             <h3>検索結果</h3>
-            <div id="output"></div>
+            <div class = "scroll" id="output"></div>
             </main>
             <footer class="footer">
                 <small class="footer_copyright">By CanoeWiki, Japan. &copy;2023 </small>
             </footer>
             <script src="main.js" defer="defer"></script>
+            <script src="cse.js" defer="defer"></script>
         </div>
     </body>
 </html>
